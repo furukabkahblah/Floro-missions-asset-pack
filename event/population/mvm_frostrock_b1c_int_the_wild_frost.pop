@@ -1197,6 +1197,7 @@ WaveSchedule
                 {
                     Template T_TFBot_Pyro_Flaregun
                 }
+	    }
         }
     }
 
