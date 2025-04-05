@@ -9,7 +9,6 @@ WaveSchedule
 {
     StartingCurrency                    1200
     RespawnWaveTime                     2
-    DisallowUpgrade                     explode_on_ignite [$SIGSEGV]
     CanBotsAttackWhileInSpawnRoom       no
     Advanced                            1
 
@@ -78,7 +77,7 @@ WaveSchedule
             Template    T_TFBot_Engineer_Sentry_Teleporter
         }
     }
-    // Wave 1 Payout 500
+
     Wave
     {
         StartWaveOutput
@@ -157,7 +156,7 @@ WaveSchedule
                 TFBot
                 {
                     Template    T_TFBot_Giant_Soldier
-                    Name "Giant Weak Snowball Soldier"
+                    Name        "Giant Weak Snowball Soldier"
 
                     ItemAttributes
                     {
@@ -258,7 +257,7 @@ WaveSchedule
                 TFBot
                 {
                     Template    T_TFBot_Giant_Soldier
-                    Name "Giant Weak Snowball Soldier"
+                    Name        "Giant Weak Snowball Soldier"
 
                     ItemAttributes
                     {
@@ -463,24 +462,24 @@ WaveSchedule
             TFBot
             {
                 Template    T_TFBot_Demoman
-                Name "Weak Snowball Demoman"
+                Name        "Weak Snowball Demoman"
                 Skill       Easy
+
                 ItemAttributes
-                    {
-                        ItemName                            TF_WEAPON_GRENADELAUNCHER
-                        // steal this for model lawl @floro
-                        "custom projectile model"           models/weapons/w_models/w_baseball.mdl
-                        "mult projectile scale"             1.3 [$Sigsegv]
-                        "apply look velocity on damage"     300
-                        "blast dmg to self increased"       0
-                        "blast radius increased"            .05
-                        "projectile trail particle"         ~critical_rocket_blue
-                        //
-                    }
+                {
+                    ItemName                            TF_WEAPON_GRENADELAUNCHER
+                    // steal this for model lawl @floro
+                    "custom projectile model"           models/weapons/w_models/w_baseball.mdl
+                    "mult projectile scale"             1.3 [$Sigsegv]
+                    "apply look velocity on damage"     300
+                    "blast dmg to self increased"       0
+                    "blast radius increased"            .05
+                    "projectile trail particle"         ~critical_rocket_blue
+                    //
+                }
             }
         }
     }
-
 
     Wave
     {
@@ -530,7 +529,7 @@ WaveSchedule
             TFBot
             {
                 Template    T_TFBot_Giant_Pyro_Flare_Spammer
-                Name "Firey Giant Pyro Flare Spammer"
+                Name        "Firey Giant Pyro Flare Spammer"
             }
         }
 
@@ -547,7 +546,7 @@ WaveSchedule
             TFBot
             {
                 Class       Soldier
-                Name "Snowball Soldier"
+                Name        "Snowball Soldier"
                 Skill       Easy
 
                 ItemAttributes
@@ -595,7 +594,7 @@ WaveSchedule
             TFBot
             {
                 Template    T_TFBot_Giant_Soldier_Crit
-                Name "Snowball Slow Crit Soldier"
+                Name        "Snowball Slow Crit Soldier"
 
                 ItemAttributes
                 {
@@ -679,7 +678,6 @@ WaveSchedule
                 {
                     Template    T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
                 }
-
             }
         }
 
@@ -828,39 +826,38 @@ WaveSchedule
         }
     }
 
-
-        WaveSpawn
-        {
-            Where               spawnbot
-            WaitForAllDead      Phase1
-            Name                dummysound1
-            Support             Limited
-
-            FirstSpawnOutput
-            {
-                Target      wave_start_relay
-                Action      RunScriptCode
-                Param       "
-	    				ClientPrint(null, 3, `\x079C1010Bam and Boozle Appears!`)
-     
-                    "
-            }
-        }
-    }
-
-    Wave
+    WaveSpawn
     {
-        StartWaveOutput
-        {
-            Target      wave_start_relay
-            Action      Trigger
-        }
+        Where               spawnbot
+        WaitForAllDead      Phase1
+        Name                dummysound1
+        Support             Limited
 
-        Initwaveoutput
+        FirstSpawnOutput
         {
             Target      wave_start_relay
             Action      RunScriptCode
             Param       "
+	    				ClientPrint(null, 3, `\x079C1010Bam and Boozle Appears!`)
+     
+                    "
+        }
+    }
+}
+
+Wave
+{
+    StartWaveOutput
+    {
+        Target      wave_start_relay
+        Action      Trigger
+    }
+
+    Initwaveoutput
+    {
+        Target      wave_start_relay
+        Action      RunScriptCode
+        Param       "
             DoEntFire(`relay_snow_light_start`, `Trigger`, `0`, 0, null, null);   
  			IncludeScript(`popextensions_main`, getroottable())
 			IncludeScript(`wildfrost_phases`, getroottable())           
@@ -873,164 +870,165 @@ WaveSchedule
             frequency = 20
             })
             "
-        }
+    }
 
-        DoneOutput
+    DoneOutput
+    {
+        Target      wave_finished_relay
+        Action      trigger
+    }
+    WaitWhenDone    65
+    Checkpoint      Yes
+
+    StartWaveOutput
+    {
+        Target      bombpath_arrows_clear_relay
+        Action      Trigger
+    }
+
+    DoneOutput
+    {
+        Target      bombpath_wavefinished
+        Action      Trigger
+    }
+
+    WaveSpawn
+    {
+        Where                   spawnbot_flank
+        Name                    w3-1
+        TotalCount              40
+        MaxActive               18
+        SpawnCount              8
+        WaitBeforeStarting      0
+        WaitBetweenSpawns       6
+        TotalCurrency           50
+
+        Squad
         {
-            Target      wave_finished_relay
-            Action      trigger
-        }
-        WaitWhenDone    65
-        Checkpoint      Yes
-
-        StartWaveOutput
-        {
-            Target      bombpath_arrows_clear_relay
-            Action      Trigger
-        }
-
-        DoneOutput
-        {
-            Target      bombpath_wavefinished
-            Action      Trigger
-        }
-
-        WaveSpawn
-        {
-            Where                   spawnbot_flank
-            Name                    w3-1
-            TotalCount              40
-            MaxActive               18
-            SpawnCount              8
-            WaitBeforeStarting      0
-            WaitBetweenSpawns       6
-            TotalCurrency           50
-
-            Squad
+            TFBot
             {
-                TFBot
-                {
-                    Template    T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
-                }
-
-                TFBot
-                {
-                    Template    T_TFBot_Medic_BigHeal
-                }
+                Template    T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
             }
-        }
-
-        WaveSpawn
-        {
-            Where                   spawnbot
-            Name                    w3-1
-            TotalCount              2
-            MaxActive               2
-            SpawnCount              1
-            WaitBeforeStarting      0
-            WaitBetweenSpawns       20
-            TotalCurrency           50
 
             TFBot
             {
-                Template    T_TFBot_Giant_Soldier_Extended_Battalion
-            }
-        }
-
-        WaveSpawn
-        {
-            Where                   spawnbot
-            Name                    w3-2
-            WaitForAllSpawned       w3-1
-            TotalCount              80
-            MaxActive               14
-            SpawnCount              1
-            WaitBeforeStarting      5
-            WaitBetweenSpawns       1
-            TotalCurrency           100
-
-            RandomChoice
-            {
-            TFBot
-            {
-                Class Pyro
-                Skill Easy
-                Attributes AlwaysFireWeapon
-            }
-            TFBot
-            {
-                Template T_TFBot_Pyro_Flaregun
-            }
-            }
-        }
-
-        WaveSpawn
-        {
-            Where                   spawnbot
-            Name                    w3-2
-            WaitForAllDead          w3-1
-            TotalCount              2
-            MaxActive               2
-            SpawnCount              1
-            WaitBeforeStarting      10
-            WaitBetweenSpawns       20
-            TotalCurrency           200
-
-            TFBot
-            {
-                Template    T_TFBot_Heavyweapons_Heater
-            }
-        }
-
-        WaveSpawn
-        {
-            Name                    Tank
-            WaitBeforeStarting      3
-            WaitForAllDead          w3-1
-            TotalCount              1
-            TotalCurrency           300
-
-            FirstSpawnOutput
-            {
-                Target      boss_spawn_relay
-                Action      Trigger
-            }
-
-            Tank
-            {
-                Health                      25000
-                Speed                       75
-                Name                        TankBoss
-                StartingPathTrackNode       boss_path_0_1
-
-                OnKilledOutput
-                {
-                    Target      boss_dead_relay
-                    Action      Trigger
-                }
-
-                OnBombDroppedOutput
-                {
-                    Target      boss_deploy_relay
-                    Action      Trigger
-                }
+                Template    T_TFBot_Medic_BigHeal
             }
         }
     }
 
-    Wave
+    WaveSpawn
     {
-        StartWaveOutput
+        Where                   spawnbot
+        Name                    w3-1
+        TotalCount              2
+        MaxActive               2
+        SpawnCount              1
+        WaitBeforeStarting      0
+        WaitBetweenSpawns       20
+        TotalCurrency           50
+
+        TFBot
         {
-            Target      wave_start_relay
+            Template    T_TFBot_Giant_Soldier_Extended_Battalion
+        }
+    }
+
+    WaveSpawn
+    {
+        Where                   spawnbot
+        Name                    w3-2
+        WaitForAllSpawned       w3-1
+        TotalCount              80
+        MaxActive               14
+        SpawnCount              1
+        WaitBeforeStarting      5
+        WaitBetweenSpawns       1
+        TotalCurrency           100
+
+        RandomChoice
+        {
+            TFBot
+            {
+                Class           Pyro
+                Skill           Easy
+                Attributes      AlwaysFireWeapon
+            }
+
+            TFBot
+            {
+                Template    T_TFBot_Pyro_Flaregun
+            }
+        }
+    }
+
+    WaveSpawn
+    {
+        Where                   spawnbot
+        Name                    w3-2
+        WaitForAllDead          w3-1
+        TotalCount              2
+        MaxActive               2
+        SpawnCount              1
+        WaitBeforeStarting      10
+        WaitBetweenSpawns       20
+        TotalCurrency           200
+
+        TFBot
+        {
+            Template    T_TFBot_Heavyweapons_Heater
+        }
+    }
+
+    WaveSpawn
+    {
+        Name                    Tank
+        WaitBeforeStarting      3
+        WaitForAllDead          w3-1
+        TotalCount              1
+        TotalCurrency           300
+
+        FirstSpawnOutput
+        {
+            Target      boss_spawn_relay
             Action      Trigger
         }
 
-        Initwaveoutput
+        Tank
         {
-            Target      wave_start_relay
-            Action      RunScriptCode
-            Param       "
+            Health                      25000
+            Speed                       75
+            Name                        TankBoss
+            StartingPathTrackNode       boss_path_0_1
+
+            OnKilledOutput
+            {
+                Target      boss_dead_relay
+                Action      Trigger
+            }
+
+            OnBombDroppedOutput
+            {
+                Target      boss_deploy_relay
+                Action      Trigger
+            }
+        }
+    }
+}
+
+Wave
+{
+    StartWaveOutput
+    {
+        Target      wave_start_relay
+        Action      Trigger
+    }
+
+    Initwaveoutput
+    {
+        Target      wave_start_relay
+        Action      RunScriptCode
+        Param       "
             DoEntFire(`relay_snow_light_start`, `Trigger`, `0`, 0, null, null);       
             SpawnEntityFromTable(`env_shake`,{
             targetname = `shake`
@@ -1041,141 +1039,146 @@ WaveSchedule
             frequency = 20
             })
             "
-        }
+    }
 
-        DoneOutput
-        {
-            Target      wave_finished_relay
-            Action      trigger
-        }
-        WaitWhenDone    65
-        Checkpoint      Yes
+    DoneOutput
+    {
+        Target      wave_finished_relay
+        Action      trigger
+    }
+    WaitWhenDone    65
+    Checkpoint      Yes
 
-        WaveSpawn
+    WaveSpawn
+    {
+        Where                   spawnbot_flank
+        Name                    4-1a
+        TotalCount              3
+        MaxActive               2
+        SpawnCount              1
+        WaitBeforeStarting      0.5
+        WaitBetweenSpawns       20
+        TotalCurrency           100
+
+        TFBot
         {
-            Where                   spawnbot_flank
-            Name                    4-1a
-            TotalCount              3
-            MaxActive               2
-            SpawnCount              1
-            WaitBeforeStarting      0.5
-            WaitBetweenSpawns       20
-            TotalCurrency           100
+            Template    T_TFBot_Giant_Soldier_Spammer_Reload
+        }
+    }
+
+    WaveSpawn
+    {
+        Where                   spawnbot
+        Name                    4-1
+        TotalCount              56
+        MaxActive               14
+        SpawnCount              6
+        WaitBeforeStarting      0
+        WaitBetweenSpawns       0
+        TotalCurrency           100
+
+        RandomChoice
+        {
+            TFBot
+            {
+                Template    T_TFBot_Soldier_Extended_Concheror
+            }
 
             TFBot
             {
-                Template    T_TFBot_Giant_Soldier_Spammer_Reload
-            }
-        }
+                Name                    "Fast Miner Soldier"
+                Class                   Soldier
+                Skill                   Expert
+                ClassIcon               soldier_conch_pickaxe
+                WeaponRestrictions      MeleeOnly
+                Item                    "The Escape Plan"
+                Attributes              SpawnWithFullCharge
+                Item                    "The Concheror"
 
-        WaveSpawn
-        {
-            Where                   spawnbot
-            Name                    4-1
-            TotalCount              56
-            MaxActive               14
-            SpawnCount              6
-            WaitBeforeStarting      0
-            WaitBetweenSpawns       0
-            TotalCurrency           100
-
-            RandomChoice
-            {
-                TFBot
+                ItemAttributes
                 {
-                    Template    T_TFBot_Soldier_Extended_Concheror
+                    ItemName                    "The Escape Plan"
+                    "critboost on kill"         5
+                    "self mark for death"       0
                 }
 
-                TFBot
-				{
-					Name "Fast Miner Soldier"
-					Class Soldier
-					Skill Expert
-					ClassIcon soldier_conch_pickaxe
-					WeaponRestrictions MeleeOnly
-					Item "The Escape Plan"
-					Attributes SpawnWithFullCharge
-					Item "The Concheror"
-					ItemAttributes
-					{
-						ItemName "The Escape Plan"
-						"critboost on kill" 5
-						"self mark for death" 0
-					}
-					CharacterAttributes
-					{
-						"increase buff duration"	9.0
-					}
-				}
-            }
-        }
-
-        WaveSpawn
-        {
-            Where                   spawnbot_flank
-            Name                    4-1
-            WaitForAllSpawned       4-1a
-            TotalCount              6
-            MaxActive               6
-            SpawnCount              3
-            WaitBeforeStarting      0
-            WaitBetweenSpawns       30
-            TotalCurrency           400
-
-            Squad
-            {
-                TFBot
+                CharacterAttributes
                 {
-                    Template        T_TFBot_Giant_Pyro
-                    Attributes      AlwaysFireWeapon
-                    Skill           Easy
-                }
-
-                TFBot
-                {
-                    Template    T_TFBot_Giant_Pyro
-                }
-
-                TFBot
-                {
-                    Template    T_TFBot_Giant_Pyro
+                    "increase buff duration"    9.0
                 }
             }
         }
+    }
 
-        WaveSpawn
+    WaveSpawn
+    {
+        Where                   spawnbot_flank
+        Name                    4-1
+        WaitForAllSpawned       4-1a
+        TotalCount              6
+        MaxActive               6
+        SpawnCount              3
+        WaitBeforeStarting      0
+        WaitBetweenSpawns       30
+        TotalCurrency           400
+
+        Squad
         {
-            Where                   spawnbot
-            WaitForAllSpawned       4-1
-            TotalCount              100
-            MaxActive               15
-            SpawnCount              1
-            WaitBeforeStarting      0
-            WaitBetweenSpawns       0
-            TotalCurrency           100
-            Support                 1
-
-            RandomChoice
+            TFBot
             {
-                TFBot
-                {
-                    Class Demoman
-                    Skill Expert
-                }
-                TFBot
-                {
-                    Class Demoman
-                    Skill Expert
-                }
-                TFBot
-                {
-                    Class Pyro
-                    Skill Expert
-                }
-                TFBot
-                {
-                    Template T_TFBot_Pyro_Flaregun
-                }
+                Template        T_TFBot_Giant_Pyro
+                Attributes      AlwaysFireWeapon
+                Skill           Easy
+            }
+
+            TFBot
+            {
+                Template    T_TFBot_Giant_Pyro
+            }
+
+            TFBot
+            {
+                Template    T_TFBot_Giant_Pyro
+            }
+        }
+    }
+
+    WaveSpawn
+    {
+        Where                   spawnbot
+        WaitForAllSpawned       4-1
+        TotalCount              100
+        MaxActive               15
+        SpawnCount              1
+        WaitBeforeStarting      0
+        WaitBetweenSpawns       0
+        TotalCurrency           100
+        Support                 1
+
+        RandomChoice
+        {
+            TFBot
+            {
+                Class       Demoman
+                Skill       Expert
+            }
+
+            TFBot
+            {
+                Class       Demoman
+                Skill       Expert
+            }
+
+            TFBot
+            {
+                Class       Pyro
+                Skill       Expert
+            }
+
+            TFBot
+            {
+                Template    T_TFBot_Pyro_Flaregun
+            }
         }
     }
 
@@ -1226,6 +1229,19 @@ WaveSchedule
                 TFBot
                 {
                     Template    T_TFBot_Giant_Soldier_Extended_Concheror
+                    Name "Giant Conch Snowball Soldier"
+
+                    ItemAttributes
+                    {
+                        ItemName                            TF_WEAPON_ROCKETLAUNCHER
+                        // steal this for model lawl @floro
+                        "custom projectile model"           models/weapons/w_models/w_baseball.mdl
+                        "mult projectile scale"             1.8 [$Sigsegv]
+                        "apply look velocity on damage"     300
+                        "blast dmg to self increased"       0
+                        "projectile trail particle"         ~critical_rocket_blue
+                        //
+                    }
                 }
 
                 TFBot
@@ -1360,6 +1376,19 @@ WaveSchedule
                 TFBot
                 {
                     Template    T_TFBot_Giant_Soldier_Extended_Concheror
+                    Name "Giant Conch Snowball Soldier"
+
+                    ItemAttributes
+                    {
+                        ItemName                            TF_WEAPON_ROCKETLAUNCHER
+                        // steal this for model lawl @floro
+                        "custom projectile model"           models/weapons/w_models/w_baseball.mdl
+                        "mult projectile scale"             1.8 [$Sigsegv]
+                        "apply look velocity on damage"     300
+                        "blast dmg to self increased"       0
+                        "projectile trail particle"         ~critical_rocket_blue
+                        //
+                    }
                 }
 
                 TFBot
@@ -1433,17 +1462,16 @@ WaveSchedule
                 TFBot
                 {
                     Template    T_TFBot_Giant_Demo_Burst
+                    Name "Giant Burst Snowball Demoman"
 
                     ItemAttributes
                     {
                         ItemName                            TF_WEAPON_GRENADELAUNCHER
                         // steal this for model lawl @floro
                         "custom projectile model"           models/weapons/w_models/w_baseball.mdl
-                        "mult projectile scale"             1.3 [$Sigsegv]
+                        "mult projectile scale"             1.8 [$Sigsegv]
                         "apply look velocity on damage"     300
-                        "damage bonus"                      0.4
                         "blast dmg to self increased"       0
-                        "blast radius increased"            .05
                         "projectile trail particle"         ~critical_rocket_blue
                         //
                     }
@@ -1472,17 +1500,16 @@ WaveSchedule
                 TFBot
                 {
                     Template    T_TFBot_Giant_Demo_Burst
+                    Name "Giant Burst Snowball Demoman"
 
                     ItemAttributes
                     {
                         ItemName                            TF_WEAPON_GRENADELAUNCHER
                         // steal this for model lawl @floro
                         "custom projectile model"           models/weapons/w_models/w_baseball.mdl
-                        "mult projectile scale"             1.3 [$Sigsegv]
+                        "mult projectile scale"             1.8 [$Sigsegv]
                         "apply look velocity on damage"     300
-                        "damage bonus"                      0.4
                         "blast dmg to self increased"       0
-                        "blast radius increased"            .05
                         "projectile trail particle"         ~critical_rocket_blue
                         //
                     }
@@ -1495,21 +1522,20 @@ WaveSchedule
             }
         }
 
-//        WaveSpawn
-//        {
-//            Where                   spawnbot
-//            WaitForAllSpawned       BossC
-//
-//            FirstSpawnOutput
-//            {
-//                Target      wave_start_relay
-//                Action      RunScriptCode
-//                Param       "
-//                    EntFire(`shake`,`startshake`)  
-//                "
-//            }
- //       }
-
+        // WaveSpawn
+        // {
+        // Where                   spawnbot
+        // WaitForAllSpawned       BossC
+        //
+        // FirstSpawnOutput
+        // {
+        // Target      wave_start_relay
+        // Action      RunScriptCode
+        // Param       "
+        // EntFire(`shake`,`startshake`)
+        // "
+        // }
+        // }
         WaveSpawn
         {
             Name                    SudoSound1
@@ -1532,6 +1558,24 @@ WaveSchedule
         WaveSpawn
         {
             Where                       spawnbot
+            WaitBeforeStarting          15
+            WaitForAllSpawned           SudoSound1
+            Name                        dummysound3
+            Support                     Limited
+
+            FirstSpawnOutput
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+					ClientPrint(null, 3, `\x079C1010Kill him before he goes back to his minigun!`)
+                    DoEntFire(`relay_snow_heavy_stop`, `Trigger`, `0`, 0, null, null);        
+                "
+            }
+        }
+        WaveSpawn
+        {
+            Where                       spawnbot
             WaitBeforeStarting          8
             WaitForAllSpawned           SudoSound1
             Name                        dummysound3
@@ -1548,16 +1592,15 @@ WaveSchedule
                 "
             }
         }
-
         WaveSpawn
         {
             Name                    BossC
             WaitForAllSpawned       SudoSound1
+            WaitBeforeStarting      8
             Where                   spawnbot_flank
             TotalCount              1
             MaxActive               1
             SpawnCount              1
-            WaitBeforeStarting      10
             TotalCurrency           150
 
             TFBot
@@ -1593,6 +1636,7 @@ WaveSchedule
             }
         }
     }
+
 
     Wave
     {
@@ -1634,7 +1678,7 @@ WaveSchedule
             TotalCount              2
             MaxActive               2
             SpawnCount              2
-            WaitBeforeStarting      32
+            WaitBeforeStarting      38
             TotalCurrency           100
 
             Squad
@@ -1642,10 +1686,23 @@ WaveSchedule
                 TFBot
                 {
                     Template                T_TFBot_Giant_Soldier_Spammer
-                    ClassIcon             	soldier_buff_spammer_giant
+                    Name "Giant Buff Banner Snowball Spammer Soldier"
+                    ClassIcon               soldier_buff_spammer_giant
                     Attributes              SpawnWithFullCharge
                     WeaponRestrictions      PrimaryOnly
                     Item                    "The Buff Banner"
+
+                    ItemAttributes
+                    {
+                        ItemName                            TF_WEAPON_ROCKETLAUNCHER
+                        // steal this for model lawl @floro
+                        "custom projectile model"           models/weapons/w_models/w_baseball.mdl
+                        "mult projectile scale"             1.8 [$Sigsegv]
+                        "apply look velocity on damage"     300
+                        "blast dmg to self increased"       0
+                        "projectile trail particle"         ~critical_rocket_blue
+                        //
+                    }
 
                     CharacterAttributes
                     {
@@ -1667,22 +1724,36 @@ WaveSchedule
 
         WaveSpawn
         {
-            Name                    W6-1b
-            Where                   spawnbot
-            TotalCount              2
-            MaxActive               2
-            SpawnCount              2
-            TotalCurrency           100
+            Name                W6-1b
+            Where               spawnbot
+            WaitBeforeStarting  5
+            TotalCount          2
+            MaxActive           2
+            SpawnCount          2
+            TotalCurrency       100
 
             Squad
             {
                 TFBot
                 {
                     Template                T_TFBot_Giant_Soldier_Spammer
+                    Name "Giant Buff Banner Snowball Spammer Soldier"
                     ClassIcon               soldier_buff_spammer_giant
                     Attributes              SpawnWithFullCharge
                     WeaponRestrictions      PrimaryOnly
                     Item                    "The Buff Banner"
+
+                    ItemAttributes
+                    {
+                        ItemName                            TF_WEAPON_ROCKETLAUNCHER
+                        // steal this for model lawl @floro
+                        "custom projectile model"           models/weapons/w_models/w_baseball.mdl
+                        "mult projectile scale"             1.8 [$Sigsegv]
+                        "apply look velocity on damage"     300
+                        "blast dmg to self increased"       0
+                        "projectile trail particle"         ~critical_rocket_blue
+                        //
+                    }
 
                     CharacterAttributes
                     {
@@ -1716,10 +1787,20 @@ WaveSchedule
             {
                 Class           Pyro
                 Skill           Expert
+                ClassIcon       pyro_hyper_lite
                 Name            "Crit Pyro"
                 Attributes      AlwaysCrit
                 Attributes      AlwaysFireWeapon
-            }
+				ItemAttributes 
+				{
+					ItemName "TF_WEAPON_FLAMETHROWER"
+					"damage bonus"	2.0
+				}
+				CharacterAttributes
+				{
+					"move speed bonus"	1.5
+				}
+			}
         }
 
         WaveSpawn
@@ -1837,8 +1918,8 @@ WaveSchedule
             Name                    W6-2a
             Where                   spawnbot_flank
             WaitForAllSpawned       W5_Wank
-            TotalCount              8
-            MaxActive               8
+            TotalCount              9
+            MaxActive               9
             SpawnCount              3
             WaitBetweenSpawns       25
             WaitBeforeStarting      20
@@ -1848,7 +1929,7 @@ WaveSchedule
             {
                 TFBot
                 {
-                    Template    T_TFBot_Giant_Heavyweapons
+                    Template    T_TFBot_Giant_Heavyweapons_Deflector
                 }
 
                 TFBot
@@ -1912,20 +1993,40 @@ WaveSchedule
             Name                    W6-2b
             Where                   spawnbot_flank
             WaitForAllSpawned       W6-2a
-            TotalCount              1
-            MaxActive               1
-            SpawnCount              1
+            TotalCount              2
+            MaxActive               2
+            SpawnCount              2
             WaitBeforeStarting      45
             TotalCurrency           50
 
-            TFBot
+            Squad
             {
-                Template    T_TFBot_Soldier_BurstFire
-                Name        "Frostrock Sweep"
-
-                CharacterAttributes
+                TFBot
                 {
-                    "damage bonus"      0.5
+                    Template    T_TFBot_Soldier_BurstFire
+                    Name        "Frostrock Sweep"
+
+                    ItemAttributes
+                    {
+                        ItemName                            TF_WEAPON_ROCKETLAUNCHER
+                        // steal this for model lawl @floro
+                        "custom projectile model"           models/weapons/w_models/w_baseball.mdl
+                        "mult projectile scale"             1.8 [$Sigsegv]
+                        "apply look velocity on damage"     300
+                        "blast dmg to self increased"       0
+                        "projectile trail particle"         ~critical_rocket_blue
+                        //
+                    }
+
+                    CharacterAttributes
+                    {
+                        "damage bonus"      0.5
+                    }
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Medic_Regen
                 }
             }
         }
@@ -1936,7 +2037,7 @@ WaveSchedule
             Where                   spawnbot_flank
             WaitForAllSpawned       W6-2a
             TotalCount              99
-            MaxActive               15
+            MaxActive               10
             SpawnCount              5
             WaitBeforeStarting      45
             TotalCurrency           50
@@ -1948,5 +2049,35 @@ WaveSchedule
                 ClassIcon       scout_fish_nys
             }
         }
+
+        WaveSpawn
+        {
+            Name                    W6-2bSUPPORT
+            Where                   spawnbot_flank
+            WaitForAllSpawned       W6-2a
+            TotalCount              99
+            MaxActive               10
+            SpawnCount              5
+            WaitBeforeStarting      43
+            TotalCurrency           50
+            Support                 Limited
+
+            TFBot
+            {
+                Template        T_TFBot_Demoman
+                Skill           Normal
+                Attributes      AlwaysCrit
+                ItemAttributes
+                    {
+                        ItemName                            TF_WEAPON_GRENADELAUNCHER
+                        // steal this for model lawl @floro
+                        "custom projectile model"           models/weapons/w_models/w_baseball.mdl
+                        "mult projectile scale"             1.8 [$Sigsegv]
+                        "apply look velocity on damage"     300
+                        "blast dmg to self increased"       0
+                        "projectile trail particle"         ~critical_rocket_blue
+                        //
+                    }
+            }
+        }
     }
-}
