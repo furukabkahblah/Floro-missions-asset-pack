@@ -1,0 +1,1975 @@
+// credit to lobotomy and claudz for helping me with the vscript stuff in general
+// collab between floro and furuka
+// this mission is owned by furuka, I am executing my rights under the copyright act of 2021 in Singapore
+// https://www.ipos.gov.sg/docs/default-source/resources-library/copyright/copyright-act-factsheet.pdf?sfvrsn=be437e59_74
+// I have automatic copyright on all my work as a singaporean citizen, this reminder is for any risk of my popfiles being edited with malicious intent by a person in this organization.
+// While Singapore does not have a formal copyright registration system, Singapore law grants automatic copyright protection as soon as your work is created or expressed in a form which is tangible.
+// In other words, a creator gets automatic copyright protection as soon as that work is reduced to a form that allows it to be reproduced,
+// such as when the story is written on paper, when a script is typed and saved in a digital file, when a play is performed, when a song is written or recorded,
+// or when a painting or a sculpture is created.
+// Copyright protects the following types of material:
+// literary works (e.g. books, articles in journals or newspapers, lyrics in songs, source codes of
+// computer programs);
+// • dramatic works (e.g. scripts for films or drama (as applied), choreographic scripts for shows
+// or dance routines);
+// • musical works (e.g. melodies);
+// • artistic works (e.g. paintings, sculptures, drawings, engravings, photographs, buildings or
+// models of buildings, works of artistic craftsmanship such as designer furniture that is not mass
+// produced);
+// • published editions of literary, dramatic, musical, or artistic works (e.g. typographic
+// arrangements of a published work);
+// • sound recordings (e.g. podcasts, music, or audiobooks contained in a digital file);
+// • films (e.g. movies or videos);
+// • television and radio broadcasts (i.e. broadcasts by way of television or radio);
+// • cable programmes(i.e. programmes (visual images and sound) included in a cable programme
+// service sent by means of a telecommunication system); and
+// • performances (e.g. performances by musicians, singers, and comedians).
+// Content creators are the default copyright owners,
+// including for all types of commissioned content.
+// Exception:
+// • for employee-created content, the employer is the
+// default copyright owner of all types of content
+// created by their employees in the course of their
+// employment.
+// Potato.TF doesn't meet this exception as you do not pay or commission me. You Are Not My Employeer.
+// You Don't Have The Right To Edit My Popfile.
+// I Do Not Give You The Authority To Edit My Popfile.
+// (under the Copyright Act 2021)
+// • Anyone who uses an authorial work (i.e. a
+// literary, dramatic, musical, or artistic work) or a
+// performance in public (e.g. depending on the
+// work or performance, by sharing it online,
+// publishing it, or including it in corporate
+// collaterals) must identify its creator or
+// performer.
+// • This identification must be clear and reasonably
+// prominent, and in the manner that the creator or
+// performer wishes to be identified (e.g. the
+// creator or performer may require the use of a
+// pseudonym instead of their name).
+#base       robot_giant.pop
+#base       robot_standard.pop
+#base       robot_wildfrost.pop
+
+WaveSchedule
+{
+    StartingCurrency                    1200
+    RespawnWaveTime                     2
+    DisallowUpgrade                     explode_on_ignite [$SIGSEGV]
+    CanBotsAttackWhileInSpawnRoom       no
+    Advanced                            1
+
+    Mission	// sentry buster
+    {
+        Objective               DestroySentries
+        InitialCooldown         20
+        Where                   spawnbot
+        BeginAtWave             1
+        RunForThisManyWaves     6
+        CooldownTime            20
+
+        TFBot
+        {
+            Template    T_TFBot_SentryBuster
+        }
+    }
+
+    Mission
+    {
+        Objective               Sniper
+        InitialCooldown         10
+        Where                   spawnbot_mission_sniper
+        BeginAtWave             3
+        RunForThisManyWaves     1
+        CooldownTime            20
+        DesiredCount            2
+
+        TFBot
+        {
+            Class               Sniper
+            Skill               Expert
+            Name                Sniper
+            MaxVisionRange      3000
+        }
+    }
+
+    Mission
+    {
+        Objective               Engineer
+        InitialCooldown         60
+        Where                   spawnbot
+        BeginAtWave             4
+        RunForThisManyWaves     1
+        CooldownTime            25
+        DesiredCount            1
+
+        TFBot
+        {
+            Template    T_TFBot_Engineer_Sentry_Teleporter
+        }
+    }
+
+    Mission
+    {
+        Objective               Engineer
+        InitialCooldown         60
+        Where                   spawnbot
+        BeginAtWave             6
+        RunForThisManyWaves     1
+        CooldownTime            30
+        DesiredCount            1
+
+        TFBot
+        {
+            Template    T_TFBot_Engineer_Sentry_Teleporter
+        }
+    }
+    // Wave 1 Payout 500
+    Wave
+    {
+        StartWaveOutput
+        {
+            Target      wave_start_relay
+            Action      Trigger
+        }
+
+        Initwaveoutput
+        {
+            Target      wave_start_relay
+            Action      RunScriptCode
+            Param       "
+            DoEntFire(`relay_snow_light_start`, `Trigger`, `0`, 0, null, null);     
+            SpawnEntityFromTable(`env_shake`,{
+            targetname = `shake`
+            origin = Vector(-3122, -8, 232)
+            amplitude = 12
+            spawnflags = `5`
+            duration = 12
+            frequency = 20
+            })
+            "
+        }
+
+        DoneOutput
+        {
+            Target      wave_finished_relay
+            Action      trigger
+        }
+        WaitWhenDone    65
+        Checkpoint      Yes
+
+        WaveSpawn
+        {
+            Name                    1-bait
+            Where                   spawnbot
+            TotalCount              24
+            MaxActive               20
+            SpawnCount              4
+            TotalCurrency           25
+            WaitBetweenSpawns       1.5
+
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template    T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Pyro
+                    Skill       Easy
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                1-thegiant
+            WaitForAllDead      1-bait
+            Where               spawnbot
+            TotalCount          3
+            MaxActive           3
+            SpawnCount          3
+            TotalCurrency       25
+
+            Squad
+            {
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Soldier
+
+                    ItemAttributes
+                    {
+                        ItemName                            TF_WEAPON_ROCKETLAUNCHER
+                        // steal this for model lawl @floro
+                        "custom projectile model"           models/weapons/w_models/w_baseball.mdl
+                        "mult projectile scale"             1.3 [$Sigsegv]
+                        "apply look velocity on damage"     300
+                        "damage bonus"                      0.4
+                        "blast dmg to self increased"       0
+                        "projectile trail particle"         ~critical_rocket_blue
+                        //
+                    }
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Medic_QuickUber
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Medic_QuickUber
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    1-Ab
+            WaitForAllDead          1-thegiant
+            Where                   spawnbot
+            TotalCount              3
+            MaxActive               1
+            SpawnCount              1
+            WaitBeforeStarting      0
+            WaitBetweenSpawns       20
+            TotalCurrency           150
+
+            TFBot
+            {
+                Template    T_TFBot_Giant_Scout_Baseball
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    1-A-Supports
+            WaitForAllSpawned       1-thegiant
+            Where                   spawnbot_flank
+            TotalCount              24
+            MaxActive               8
+            SpawnCount              4
+            WaitBeforeStarting      8
+            WaitBetweenSpawns       14
+            TotalCurrency           50
+
+            TFBot
+            {
+                Name        "behind u lol"
+                Template    T_TFBot_Demoman_Knight
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    1-A-SupportsLimi
+            WaitForAllDead          1-thegiant
+            Where                   spawnbot
+            TotalCount              28
+            MaxActive               12
+            SpawnCount              6
+            WaitBeforeStarting      15
+            WaitBetweenSpawns       6
+            TotalCurrency           50
+            Support                 Limited
+
+            TFBot
+            {
+                Template    T_TFBot_Scout_Sandman
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    1-B
+            Where                   spawnbot_flank
+            WaitForAllDead          1-thegiant
+            TotalCount              6
+            MaxActive               6
+            SpawnCount              3
+            WaitBetweenSpawns       23
+            WaitBeforeStarting      25
+            TotalCurrency           100
+
+            Squad
+            {
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Soldier
+
+                    ItemAttributes
+                    {
+                        ItemName                            TF_WEAPON_ROCKETLAUNCHER
+                        // steal this for model lawl @floro
+                        "custom projectile model"           models/weapons/w_models/w_baseball.mdl
+                        "mult projectile scale"             1.3 [$Sigsegv]
+                        "apply look velocity on damage"     300
+                        "damage bonus"                      0.4
+                        "blast dmg to self increased"       0
+                        "projectile trail particle"         ~critical_rocket_blue
+                        //
+                    }
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Medic_QuickUber
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Medic_QuickUber
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    1-C
+            Where                   spawnbot_flank
+            WaitForAllSpawned       1-B
+            TotalCount              6
+            MaxActive               6
+            SpawnCount              3
+            WaitBetweenSpawns       20
+            WaitBeforeStarting      15
+            TotalCurrency           150
+
+            Squad
+            {
+                TFBot
+                {
+                    Template        T_TFBot_Giant_Pyro
+                    Attributes      AlwaysFireWeapon
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Medic_QuickUber
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Medic_QuickUber
+                }
+            }
+        }
+
+        // WaveSpawn
+        // {
+        // Name                    1-CSupport
+        // Where                   spawnbot_flank
+        // WaitForAllSpawned       1-B
+        // TotalCount              18
+        // MaxActive               6
+        // SpawnCount              6
+        // WaitBetweenSpawns       14
+        // TotalCurrency           50
+        // Support                 Limited
+        //
+        // TFBot
+        // {
+        // Name                    "Conch Pickaxe Soldier"
+        // Class                   Soldier
+        // Skill                   Expert
+        // ClassIcon               soldier_conch_pickaxe
+        // WeaponRestrictions      MeleeOnly
+        // Attributes              SpawnWithFullCharge
+        // Item                    "The Escape Plan"
+        // Item                    "The Concheror"
+        //
+        // ItemAttributes
+        // {
+        // ItemName                    "The Escape Plan"
+        // "critboost on kill"         5
+        // "self mark for death"       1
+        // }
+        //
+        // CharacterAttributes
+        // {
+        // "increase buff duration"    9.0
+        // }
+        // }
+        // }
+        WaveSpawn
+        {
+            Where                   spawnbot
+            WaitForAllSpawned       BossA
+
+            FirstSpawnOutput
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+                    EntFire(`shake`,`startshake`)  
+                "
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    SudoSound1
+            Where                   spawnbot
+            WaitBeforeStarting      2
+            WaitForAllDead          1-C
+
+            FirstSpawnOutput
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+                    ClientPrint(null, 3, `\x079C1010A Snowstorm brews over you as the bomb gets sweeped away....Something is coming...`)
+                    EntFire(`shake`,`startshake`)
+                    DoEntFire(`relay_snow_heavy_start`, `Trigger`, `0`, 0, null, null);     
+                "
+            }
+        }
+
+        WaveSpawn
+        {
+            Where                       spawnbot
+            WaitBeforeStarting          8
+            WaitForAllSpawned           SudoSound1
+            Name                        dummysound3
+            Support                     Limited
+            FirstSpawnWarningSound      misc/cp_harbor_red_whistle.wav	// sound plays after wbs ends
+
+            FirstSpawnOutput
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+					ClientPrint(null, 3, `\x079C1010A Boss Appears!`)
+                    DoEntFire(`relay_snow_heavy_stop`, `Trigger`, `0`, 0, null, null);        
+                "
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    BossA
+            WaitForAllSpawned       SudoSound1
+            Where                   spawnbot_flank
+            TotalCount              1
+            MaxActive               1
+            SpawnCount              1
+            WaitBeforeStarting      10
+            TotalCurrency           150
+
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Soldier_Barrager_BumboBoss
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Giant_TheSnowKnight
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Giant_VeildedLady
+                }
+            }
+
+            StartWaveOutput
+            {
+                Target      BigNet
+                Action      RunScriptCode
+                Param       "
+					EntFire(`intel`, `ForceResetSilent`, null, 3.9, null)
+				"
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    1-Support1
+            Where                   spawnbot_flank
+            WaitForAllSpawned       1-bait
+            TotalCount              28
+            MaxActive               8
+            SpawnCount              4
+            WaitBeforeStarting      15
+            WaitBetweenSpawns       13
+            TotalCurrency           50
+            Support                 Limited
+
+            TFBot
+            {
+                Template    T_TFBot_Demoman
+                Skill       Easy
+            }
+        }
+    }
+
+    Wave
+    {
+        StartWaveOutput
+        {
+            Target      wave_start_relay
+            Action      Trigger
+        }
+
+        Initwaveoutput
+        {
+            Target      wave_start_relay
+            Action      RunScriptCode
+            Param       "
+ 			IncludeScript(`popextensions_main`, getroottable())
+			IncludeScript(`wildfrost_phases`, getroottable())    
+            DoEntFire(`relay_snow_light_start`, `Trigger`, `0`, 0, null, null);       
+            SpawnEntityFromTable(`env_shake`,{
+            targetname = `shake`
+            origin = Vector(-3122, -8, 232)
+            amplitude = 12
+            spawnflags = `5`
+            duration = 12
+            frequency = 20
+            })
+            // extraspawn in pit for boss wavebar stuff
+            ::ExtraSpawnPoints <-
+			{
+				Cleanup = function() { delete ::ExtraSpawnPoints } 
+				OnGameEvent_recalculate_holidays = function(_) { if (GetRoundState() == 3) Cleanup() }
+				OnGameEvent_mvm_wave_complete = function(_) { Cleanup() }
+				//^cleanup stuff idk ask ficool2
+
+				function tagCheck() {
+				if(activator.HasBotTag(`spawnbot_tankicon`)){
+						activator.Teleport(true,Vector(2200,4400,-600),false,QAngle(),false,Vector())
+						//the coords (on bigrock) teleport it into the pit's trigger_hurt behind the wall.
+					}
+				}
+
+				function OnGameEvent_player_spawn(args) {
+					local player = GetPlayerFromUserID(args.userid)
+					if(NetProps.GetPropBool(player,`m_bIsABot`)) {
+						EntFireByHandle(player, `runscriptcode`, `ExtraSpawnPoints.tagCheck()`, 0.1, player, null)
+					}
+				}
+				OnGameEvent_player_death = function(params)
+				{
+					local player = GetPlayerFromUserID(params.userid)
+					if (!player) return
+					AddThinkToEnt(player, null)
+				}
+			} __CollectGameEventCallbacks(ExtraSpawnPoints)
+            "
+        }
+
+        DoneOutput
+        {
+            Target      wave_finished_relay
+            Action      trigger
+        }
+        WaitWhenDone    65
+        Checkpoint      Yes
+
+        WaveSpawn
+        {
+            Name                    2-A
+            Where                   spawnbot
+            TotalCount              3
+            MaxActive               3
+            SpawnCount              1
+            WaitBetweenSpawns       23
+            TotalCurrency           100
+
+            TFBot
+            {
+                Template    T_TFBot_Giant_Pyro_Flare_Spammer
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    2-ASupport
+            Where                   spawnbot
+            TotalCount              28
+            MaxActive               8
+            SpawnCount              4
+            WaitBetweenSpawns       14
+            TotalCurrency           100
+
+            TFBot
+            {
+                Class       Soldier
+                Skill       Easy
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    2-ASupportb
+            Where                   spawnbot
+            TotalCount              24
+            MaxActive               8
+            SpawnCount              4
+            WaitBetweenSpawns       17
+            TotalCurrency           50
+
+            TFBot
+            {
+                Class       Scout
+                Skill       Easy
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    2-Ab
+            Where                   spawnbot_flank
+            TotalCount              2
+            MaxActive               1
+            SpawnCount              1
+            WaitBeforeStarting      15
+            WaitBetweenSpawns       20
+            TotalCurrency           100
+
+            TFBot
+            {
+                Template    T_TFBot_Giant_Soldier_Crit
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    2-B
+            Where                   spawnbot_flank
+            WaitForAllSpawned       2-Ab
+            TotalCount              8
+            MaxActive               8
+            SpawnCount              4
+            WaitBeforeStarting      20
+            WaitBetweenSpawns       25
+            TotalCurrency           100
+
+            Squad
+            {
+                TFBot
+                {
+                    Template        T_TFBot_Giant_Boxing_Heavy
+                    Name            "Da Fast GRU Heavy"
+                    ClassIcon       heavy_gru
+                    Item            "Gloves of Running Urgently MvM"
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Medic_QuickUber
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Medic_QuickUber
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Medic_QuickUber
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    2-BSupport
+            Where                   spawnbot_flank
+            WaitForAllSpawned       2-Ab
+            TotalCount              28
+            MaxActive               8
+            SpawnCount              4
+            WaitBeforeStarting      10
+            WaitBetweenSpawns       25
+            TotalCurrency           50
+            Support                 Limited
+
+            TFBot
+            {
+                Template    T_TFBot_Heavyweapons_Heavyweight_Champ
+            }
+        }
+
+        WaveSpawn
+        {
+            Where                   spawnbot
+            WaitBeforeStarting      2
+            WaitForAllDead          2-B
+
+            FirstSpawnOutput
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+                    ClientPrint(null, 3, `\x079C1010A Snowstorm brews over you as the bomb gets sweeped away....Something is coming...`)
+                    EntFire(`shake`,`startshake`)
+                    DoEntFire(`relay_snow_heavy_start`, `Trigger`, `0`, 0, null, null);     
+                "
+            }
+        }
+
+        WaveSpawn
+        {
+            Where                       spawnbot
+            WaitForAllSpawned           Phase1
+            Name                        dummysound1
+            Support                     Limited
+            FirstSpawnWarningSound      misc/cp_harbor_red_whistle.wav
+
+            FirstSpawnOutput
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+					ClientPrint(null, 3, `\x079C1010Bamboozle Appears!`)
+                    DoEntFire(`relay_snow_heavy_stop`, `Trigger`, `0`, 0, null, null);        
+                "
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    Phase1
+            Where                   spawnbot_flank
+            TotalCount              1
+            MaxActive               1
+            SpawnCount              1
+            WaitBeforeStarting      10
+            WaitForAllDead          2-B
+            WaitBetweenSpawns       0
+            TotalCurrency           100
+
+            TFBot
+            {
+                Template    T_TFBot_Giant_Demo_BamboozleBossPhase1
+            }
+
+            StartWaveOutput
+            {
+                Target      BigNet
+                Action      RunScriptCode
+                Param       "
+					EntFire(`intel`, `ForceResetSilent`, null, 3.9, null)
+				"
+            }
+        }
+
+        // WaveSpawn
+        // {
+        // Where                   spawnbot
+        // WaitForAllSpawned       Phase2
+        //
+        // FirstSpawnOutput
+        // {
+        // Target      wave_start_relay
+        // Action      RunScriptCode
+        // Param       "
+        // EntFire(`shake`,`startshake`)
+        // "
+        // }
+        // }
+        WaveSpawn
+        {
+            Name                    Phase2
+            Where                   spawnbot
+            TotalCount              1
+            MaxActive               1
+            SpawnCount              1
+            WaitBetweenSpawns       0
+            TotalCurrency           100
+            WaitForAllDead          Phase1
+            Support                 Limited	// Fix rc rc yummersing wavebar
+
+            RandomChoice
+            {
+                RandomChoice
+                {
+                    TFBot
+                    {
+                        Template    T_TFBot_Giant_Demo_BamBossPhrase2
+                    }
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    Phase2
+            Where                   spawnbot
+            TotalCount              1
+            MaxActive               1
+            SpawnCount              1
+            WaitBetweenSpawns       0
+            TotalCurrency           100
+            WaitForAllDead          Phase1
+            Support                 Limited	// Fix rc rc yummersing wavebar
+
+            RandomChoice
+            {
+                RandomChoice
+                {
+                    TFBot
+                    {
+                        Template    T_TFBot_Giant_Demo_BoozleBossPhrase2
+                    }
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            WaitForAllDead          Phase2
+            Where                   respawnpoints	// spawning in a blu spawn into this navless area makes it invuln 24/7
+            TotalCount              0
+            SpawnCount              1
+            WaitBeforeStarting      0
+
+            TFBot
+            {
+                Template        T_TFBot_Giant_Scout
+                Name            "End Wave"
+                ClassIcon       tank_uber_lite
+                Tag             spawnbot_tankicon
+                Scale           0.01
+                Attributes      SuppressFire
+
+                CharacterAttributes
+                {
+                    // "Health Regen"	-9999
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Where               spawnbot
+            WaitForAllDead      Phase1
+            Name                dummysound1
+            Support             Limited
+
+            FirstSpawnOutput
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+	    				ClientPrint(null, 3, `\x079C1010Bam and Boozle Appears!`)
+     
+                    "
+            }
+        }
+    }
+
+    Wave
+    {
+        StartWaveOutput
+        {
+            Target      wave_start_relay
+            Action      Trigger
+        }
+
+        Initwaveoutput
+        {
+            Target      wave_start_relay
+            Action      RunScriptCode
+            Param       "
+            DoEntFire(`relay_snow_light_start`, `Trigger`, `0`, 0, null, null);   
+ 			IncludeScript(`popextensions_main`, getroottable())
+			IncludeScript(`wildfrost_phases`, getroottable())           
+            SpawnEntityFromTable(`env_shake`,{
+            targetname = `shake`
+            origin = Vector(-3122, -8, 232)
+            amplitude = 12
+            spawnflags = `5`
+            duration = 15
+            frequency = 20
+            })
+            "
+        }
+
+        DoneOutput
+        {
+            Target      wave_finished_relay
+            Action      trigger
+        }
+        WaitWhenDone    65
+        Checkpoint      Yes
+
+        StartWaveOutput
+        {
+            Target      bombpath_arrows_clear_relay
+            Action      Trigger
+        }
+
+        DoneOutput
+        {
+            Target      bombpath_wavefinished
+            Action      Trigger
+        }
+
+        WaveSpawn
+        {
+            Where                   spawnbot_flank
+            Name                    w3-1
+            TotalCount              40
+            MaxActive               18
+            SpawnCount              8
+            WaitBeforeStarting      0
+            WaitBetweenSpawns       6
+            TotalCurrency           50
+
+            Squad
+            {
+                TFBot
+                {
+                    Template    T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Medic_BigHeal
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Where                   spawnbot
+            Name                    w3-1
+            TotalCount              2
+            MaxActive               2
+            SpawnCount              1
+            WaitBeforeStarting      0
+            WaitBetweenSpawns       20
+            TotalCurrency           50
+
+            TFBot
+            {
+                Template    T_TFBot_Giant_Soldier_Extended_Battalion
+            }
+        }
+
+        WaveSpawn
+        {
+            Where                   spawnbot
+            Name                    w3-2
+            WaitForAllSpawned       w3-1
+            TotalCount              80
+            MaxActive               14
+            SpawnCount              1
+            WaitBeforeStarting      5
+            WaitBetweenSpawns       1
+            TotalCurrency           100
+
+            RandomChoice
+            {
+            TFBot
+            {
+                Class Pyro
+                Skill Easy
+                Attributes AlwaysFireWeapon
+            }
+            TFBot
+            {
+                Template T_TFBot_Pyro_Flaregun
+            }
+            }
+        }
+
+        WaveSpawn
+        {
+            Where                   spawnbot
+            Name                    w3-2
+            WaitForAllDead          w3-1
+            TotalCount              2
+            MaxActive               2
+            SpawnCount              1
+            WaitBeforeStarting      10
+            WaitBetweenSpawns       20
+            TotalCurrency           200
+
+            TFBot
+            {
+                Template    T_TFBot_Heavyweapons_Heater
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    Tank
+            WaitBeforeStarting      3
+            WaitForAllDead          w3-1
+            TotalCount              1
+            TotalCurrency           300
+
+            FirstSpawnOutput
+            {
+                Target      boss_spawn_relay
+                Action      Trigger
+            }
+
+            Tank
+            {
+                Health                      25000
+                Speed                       75
+                Name                        TankBoss
+                StartingPathTrackNode       boss_path_0_1
+
+                OnKilledOutput
+                {
+                    Target      boss_dead_relay
+                    Action      Trigger
+                }
+
+                OnBombDroppedOutput
+                {
+                    Target      boss_deploy_relay
+                    Action      Trigger
+                }
+            }
+        }
+    }
+
+    Wave
+    {
+        StartWaveOutput
+        {
+            Target      wave_start_relay
+            Action      Trigger
+        }
+
+        Initwaveoutput
+        {
+            Target      wave_start_relay
+            Action      RunScriptCode
+            Param       "
+            DoEntFire(`relay_snow_light_start`, `Trigger`, `0`, 0, null, null);       
+            SpawnEntityFromTable(`env_shake`,{
+            targetname = `shake`
+            origin = Vector(-3122, -8, 232)
+            amplitude = 12
+            spawnflags = `5`
+            duration = 12
+            frequency = 20
+            })
+            "
+        }
+
+        DoneOutput
+        {
+            Target      wave_finished_relay
+            Action      trigger
+        }
+        WaitWhenDone    65
+        Checkpoint      Yes
+
+        WaveSpawn
+        {
+            Where                   spawnbot_flank
+            Name                    4-1a
+            TotalCount              3
+            MaxActive               2
+            SpawnCount              1
+            WaitBeforeStarting      0.5
+            WaitBetweenSpawns       20
+            TotalCurrency           100
+
+            TFBot
+            {
+                Template    T_TFBot_Giant_Soldier_Spammer_Reload
+            }
+        }
+
+        WaveSpawn
+        {
+            Where                   spawnbot
+            Name                    4-1
+            TotalCount              56
+            MaxActive               14
+            SpawnCount              6
+            WaitBeforeStarting      0
+            WaitBetweenSpawns       0
+            TotalCurrency           100
+
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template    T_TFBot_Soldier_Extended_Concheror
+                }
+
+                TFBot
+				{
+					Name "Fast Miner Soldier"
+					Class Soldier
+					Skill Expert
+					ClassIcon soldier_conch_pickaxe
+					WeaponRestrictions MeleeOnly
+					Item "The Escape Plan"
+					Attributes SpawnWithFullCharge
+					Item "The Concheror"
+					ItemAttributes
+					{
+						ItemName "The Escape Plan"
+						"critboost on kill" 5
+						"self mark for death" 0
+					}
+					CharacterAttributes
+					{
+						"increase buff duration"	9.0
+					}
+				}
+            }
+        }
+
+        WaveSpawn
+        {
+            Where                   spawnbot_flank
+            Name                    4-1
+            WaitForAllSpawned       4-1a
+            TotalCount              6
+            MaxActive               6
+            SpawnCount              3
+            WaitBeforeStarting      0
+            WaitBetweenSpawns       30
+            TotalCurrency           400
+
+            Squad
+            {
+                TFBot
+                {
+                    Template        T_TFBot_Giant_Pyro
+                    Attributes      AlwaysFireWeapon
+                    Skill           Easy
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Pyro
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Pyro
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Where                   spawnbot
+            WaitForAllSpawned       4-1
+            TotalCount              100
+            MaxActive               15
+            SpawnCount              1
+            WaitBeforeStarting      0
+            WaitBetweenSpawns       0
+            TotalCurrency           100
+            Support                 1
+
+            RandomChoice
+            {
+                TFBot
+                {
+                    Class Demoman
+                    Skill Expert
+                }
+                TFBot
+                {
+                    Class Demoman
+                    Skill Expert
+                }
+                TFBot
+                {
+                    Class Pyro
+                    Skill Expert
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Flaregun
+                }
+        }
+    }
+
+    Wave
+    {
+        StartWaveOutput
+        {
+            Target      wave_start_relay
+            Action      Trigger
+        }
+
+        Initwaveoutput
+        {
+            Target      wave_start_relay
+            Action      RunScriptCode
+            Param       "
+            DoEntFire(`relay_snow_light_start`, `Trigger`, `0`, 0, null, null);   
+            SpawnEntityFromTable(`env_shake`,{
+            targetname = `shake`
+            origin = Vector(-3122, -8, 232)
+            amplitude = 16
+            spawnflags = `5`
+            duration = 10
+            frequency = 20
+            })
+            "
+        }
+
+        DoneOutput
+        {
+            Target      wave_finished_relay
+            Action      trigger
+        }
+        WaitWhenDone    65
+        Checkpoint      Yes
+
+        WaveSpawn
+        {
+            Name                5-A
+            Where               spawnbot_flank
+            TotalCount          3
+            MaxActive           3
+            SpawnCount          3
+            TotalCurrency       50
+
+            Squad
+            {
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Soldier_Extended_Concheror
+                }
+
+                TFBot
+                {
+                    Class           Medic
+                    ClassIcon       medic_uber_armored
+                    Name            "Armored Uber Medic"
+                    Health          750
+                    Skill           Expert
+                    Attributes      SpawnWithFullCharge
+                    Tag             bot_giant
+                    Scale           1.37
+                    Item            "The Warsworn Helmet"
+
+                    CharacterAttributes
+                    {
+                        "heal rate bonus"       5
+                    }
+                }
+
+                TFBot
+                {
+                    Class           Medic
+                    ClassIcon       medic_uber_armored
+                    Name            "Armored Uber Medic"
+                    Health          750
+                    Skill           Expert
+                    Attributes      SpawnWithFullCharge
+                    Tag             bot_giant
+                    Scale           1.37
+                    Item            "The Warsworn Helmet"
+
+                    CharacterAttributes
+                    {
+                        "heal rate bonus"       5
+                    }
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    W5_Wank
+            WaitBeforeStarting      30
+            SpawnCount              1
+            TotalCount              1
+            TotalCurrency           200
+
+            FirstSpawnOutput
+            {
+                Target      boss_spawn_relay
+                Action      Trigger
+            }
+
+            Tank
+            {
+                Health                      25000
+                Speed                       75
+                Name                        TankBoss
+                StartingPathTrackNode       boss_path_0_1
+
+                OnKilledOutput
+                {
+                    Target      boss_dead_relay
+                    Action      Trigger
+                }
+
+                OnBombDroppedOutput
+                {
+                    Target      boss_deploy_relay
+                    Action      Trigger
+                }
+            }
+
+            FirstSpawnOutPut
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+                ClientPrint(null,3,`\x0799CCFFTank deployed with 25k (25000) HP!`)
+                "
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    5-ASupport
+            Where                   spawnbot
+            TotalCount              18
+            MaxActive               6
+            SpawnCount              3
+            WaitBeforeStarting      5
+            WaitBetweenSpawns       12
+            TotalCurrency           100
+
+            TFBot
+            {
+                Template    T_TFBot_Heavy_IronFist_Airblast
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    5-ASupportb
+            Where                   spawnbot
+            TotalCount              28
+            MaxActive               12
+            SpawnCount              6
+            WaitBetweenSpawns       14
+            TotalCurrency           50
+
+            TFBot
+            {
+                Template    T_TFBot_Pyro_Flaregun
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    5-B
+            Where                   spawnbot_flank
+            TotalCount              6
+            MaxActive               6
+            SpawnCount              3
+            WaitForAllSpawned       W5_Wank
+            WaitBeforeStarting      35
+            WaitBetweenSpawns       25
+            TotalCurrency           100
+
+            Squad
+            {
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Soldier_Extended_Concheror
+                }
+
+                TFBot
+                {
+                    Class           Medic
+                    ClassIcon       medic_uber_armored
+                    Name            "Armored Uber Medic"
+                    Health          750
+                    Skill           Expert
+                    Attributes      SpawnWithFullCharge
+                    Tag             bot_giant
+                    Scale           1.37
+                    Item            "The Warsworn Helmet"
+
+                    CharacterAttributes
+                    {
+                        "heal rate bonus"       5
+                    }
+                }
+
+                TFBot
+                {
+                    Class           Medic
+                    ClassIcon       medic_uber_armored
+                    Name            "Armored Uber Medic"
+                    Health          750
+                    Skill           Expert
+                    Attributes      SpawnWithFullCharge
+                    Tag             bot_giant
+                    Scale           1.37
+                    Item            "The Warsworn Helmet"
+
+                    CharacterAttributes
+                    {
+                        "heal rate bonus"       5
+                    }
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    5-BSupport
+            Where                   spawnbot_flank
+            TotalCount              30
+            MaxActive               12
+            SpawnCount              6
+            WaitBetweenSpawns       10
+            TotalCurrency           50
+            WaitForAllSpawned       W5_Wank
+            Support                 Limited
+
+            TFBot
+            {
+                Template    T_TFBot_Scout_Scattergun_SlowFire
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    5-C
+            Where                   spawnbot
+            TotalCount              2
+            MaxActive               2
+            SpawnCount              2
+            WaitBeforeStarting      15
+            TotalCurrency           50
+
+            Squad
+            {
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Demo_Burst
+
+                    ItemAttributes
+                    {
+                        ItemName                            TF_WEAPON_GRENADELAUNCHER
+                        // steal this for model lawl @floro
+                        "custom projectile model"           models/weapons/w_models/w_baseball.mdl
+                        "mult projectile scale"             1.3 [$Sigsegv]
+                        "apply look velocity on damage"     300
+                        "damage bonus"                      0.4
+                        "blast dmg to self increased"       0
+                        "blast radius increased"            .05
+                        "projectile trail particle"         ~critical_rocket_blue
+                        //
+                    }
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Medic_Regen
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    5-C2
+            Where                   spawnbot_flank
+            WaitForAllSpawned       W5_Wank
+            TotalCount              2
+            MaxActive               2
+            SpawnCount              2
+            WaitBeforeStarting      20
+            TotalCurrency           100
+
+            Squad
+            {
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Demo_Burst
+
+                    ItemAttributes
+                    {
+                        ItemName                            TF_WEAPON_GRENADELAUNCHER
+                        // steal this for model lawl @floro
+                        "custom projectile model"           models/weapons/w_models/w_baseball.mdl
+                        "mult projectile scale"             1.3 [$Sigsegv]
+                        "apply look velocity on damage"     300
+                        "damage bonus"                      0.4
+                        "blast dmg to self increased"       0
+                        "blast radius increased"            .05
+                        "projectile trail particle"         ~critical_rocket_blue
+                        //
+                    }
+                }
+
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Medic_Regen
+                }
+            }
+        }
+
+//        WaveSpawn
+//        {
+//            Where                   spawnbot
+//            WaitForAllSpawned       BossC
+//
+//            FirstSpawnOutput
+//            {
+//                Target      wave_start_relay
+//                Action      RunScriptCode
+//                Param       "
+//                    EntFire(`shake`,`startshake`)  
+//                "
+//            }
+ //       }
+
+        WaveSpawn
+        {
+            Name                    SudoSound1
+            Where                   spawnbot
+            WaitBeforeStarting      2
+            WaitForAllDead          5-B
+
+            FirstSpawnOutput
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+                    ClientPrint(null, 3, `\x079C1010A Snowstorm brews over you as the bomb gets sweeped away....Something is coming...`)
+                    EntFire(`shake`,`startshake`)
+                    DoEntFire(`relay_snow_heavy_start`, `Trigger`, `0`, 0, null, null);     
+                "
+            }
+        }
+
+        WaveSpawn
+        {
+            Where                       spawnbot
+            WaitBeforeStarting          8
+            WaitForAllSpawned           SudoSound1
+            Name                        dummysound3
+            Support                     Limited
+            FirstSpawnWarningSound      misc/cp_harbor_red_whistle.wav	// sound plays after wbs ends
+
+            FirstSpawnOutput
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+					ClientPrint(null, 3, `\x079C1010King Moko Appears!`)
+                    DoEntFire(`relay_snow_heavy_stop`, `Trigger`, `0`, 0, null, null);        
+                "
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    BossC
+            WaitForAllSpawned       SudoSound1
+            Where                   spawnbot_flank
+            TotalCount              1
+            MaxActive               1
+            SpawnCount              1
+            WaitBeforeStarting      10
+            TotalCurrency           150
+
+            TFBot
+            {
+                Template    T_TFBot_Giant_KingMoko
+            }
+
+            StartWaveOutput
+            {
+                Target      BigNet
+                Action      RunScriptCode
+                Param       "
+					EntFire(`intel`, `ForceResetSilent`, null, 3.9, null)
+				"
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    5-BossSupport
+            Where                   spawnbot
+            WaitForAllSpawned       BossC
+            TotalCount              99
+            MaxActive               12
+            SpawnCount              6
+            WaitBetweenSpawns       5
+            TotalCurrency           50
+            Support                 Limited
+
+            TFBot
+            {
+                Template    T_TFBot_Demoman_Knight
+            }
+        }
+    }
+
+    Wave
+    {
+        StartWaveOutput
+        {
+            Target      wave_start_relay
+            Action      Trigger
+        }
+
+        Initwaveoutput
+        {
+            Target      wave_start_relay
+            Action      RunScriptCode
+            Param       "
+            DoEntFire(`relay_snow_light_start`, `Trigger`, `0`, 0, null, null);   
+            SpawnEntityFromTable(`env_shake`,{
+            targetname = `shake`
+            origin = Vector(-3122, -8, 232)
+            amplitude = 16
+            spawnflags = `5`
+            duration = 10
+            frequency = 20
+            })
+            "
+        }
+
+        DoneOutput
+        {
+            Target      wave_finished_relay
+            Action      trigger
+        }
+        WaitWhenDone    65
+        Checkpoint      Yes
+
+        WaveSpawn
+        {
+            Name                    W6-1a
+            Where                   spawnbot_flank
+            TotalCount              2
+            MaxActive               2
+            SpawnCount              2
+            WaitBeforeStarting      32
+            TotalCurrency           100
+
+            Squad
+            {
+                TFBot
+                {
+                    Template                T_TFBot_Giant_Soldier_Spammer
+                    ClassIcon             	soldier_buff_spammer_giant
+                    Attributes              SpawnWithFullCharge
+                    WeaponRestrictions      PrimaryOnly
+                    Item                    "The Buff Banner"
+
+                    CharacterAttributes
+                    {
+                        "move speed bonus"                      0.5
+                        "damage force reduction"                0.4
+                        "airblast vulnerability multiplier"     0.4
+                        "override footstep sound set"           3
+                        "increase buff duration"                9.0
+                    }
+                }
+
+                TFBot
+                {
+                    Template        T_TFBot_Giant_Medic	// yes a popper its BIGROCK DEAL WITH ITTTTT :trolley:
+                    ClassIcon       medic_pop
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    W6-1b
+            Where                   spawnbot
+            TotalCount              2
+            MaxActive               2
+            SpawnCount              2
+            TotalCurrency           100
+
+            Squad
+            {
+                TFBot
+                {
+                    Template                T_TFBot_Giant_Soldier_Spammer
+                    ClassIcon               soldier_buff_spammer_giant
+                    Attributes              SpawnWithFullCharge
+                    WeaponRestrictions      PrimaryOnly
+                    Item                    "The Buff Banner"
+
+                    CharacterAttributes
+                    {
+                        "move speed bonus"                      0.5
+                        "damage force reduction"                0.4
+                        "airblast vulnerability multiplier"     0.4
+                        "override footstep sound set"           3
+                        "increase buff duration"                9.0
+                    }
+                }
+
+                TFBot
+                {
+                    Template        T_TFBot_Giant_Medic	// yes a popper its BIGROCK DEAL WITH ITTTTT :trolley:
+                    ClassIcon       medic_pop
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    W6-1support
+            Where                   spawnbot
+            TotalCount              18
+            MaxActive               12
+            SpawnCount              6
+            WaitBetweenSpawns       10
+            TotalCurrency           50
+
+            TFBot
+            {
+                Class           Pyro
+                Skill           Expert
+                Name            "Crit Pyro"
+                Attributes      AlwaysCrit
+                Attributes      AlwaysFireWeapon
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    W6-1supporta
+            Where                   spawnbot
+            TotalCount              24
+            MaxActive               12
+            SpawnCount              6
+            WaitBetweenSpawns       10
+            TotalCurrency           50
+
+            TFBot
+            {
+                Class           Heavy
+                Skill           Easy
+                ClassIcon       heavy_heater
+                Name            "Heater Heavy"
+                Item            "The Huo Long Heatmaker"
+                Item            "The Bunsen Brave"
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    W5_Wans
+            WaitBeforeStarting      45
+            WaitForAllSpawned       W6-1b
+            WaitBetweenSpawns       25
+            TotalCount              1
+            TotalCurrency           200
+
+            FirstSpawnOutput
+            {
+                Target      boss_spawn_relay
+                Action      Trigger
+            }
+
+            Tank
+            {
+                Health                      30000
+                Speed                       75
+                Name                        TankBoss
+                StartingPathTrackNode       boss_path_0_1
+
+                OnKilledOutput
+                {
+                    Target      boss_dead_relay
+                    Action      Trigger
+                }
+
+                OnBombDroppedOutput
+                {
+                    Target      boss_deploy_relay
+                    Action      Trigger
+                }
+            }
+
+            FirstSpawnOutPut
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+                ClientPrint(null,3,`\x0799CCFFTank deployed with 30k (30000) HP!`)
+                "
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    W5_Wank
+            WaitBeforeStarting      20
+            WaitForAllSpawned       W5_Wans
+            TotalCount              1
+            TotalCurrency           200
+
+            FirstSpawnOutput
+            {
+                Target      boss_spawn_relay
+                Action      Trigger
+            }
+
+            Tank
+            {
+                Health                      25000
+                Speed                       75
+                Name                        TankBoss
+                StartingPathTrackNode       boss_path_0_1
+
+                OnKilledOutput
+                {
+                    Target      boss_dead_relay
+                    Action      Trigger
+                }
+
+                OnBombDroppedOutput
+                {
+                    Target      boss_deploy_relay
+                    Action      Trigger
+                }
+            }
+
+            FirstSpawnOutPut
+            {
+                Target      wave_start_relay
+                Action      RunScriptCode
+                Param       "
+                ClientPrint(null,3,`\x0799CCFFTank deployed with 25k (25000) HP!`)
+                "
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    W6-2a
+            Where                   spawnbot_flank
+            WaitForAllSpawned       W5_Wank
+            TotalCount              8
+            MaxActive               8
+            SpawnCount              3
+            WaitBetweenSpawns       25
+            WaitBeforeStarting      20
+            TotalCurrency           50
+
+            Squad
+            {
+                TFBot
+                {
+                    Template    T_TFBot_Giant_Heavyweapons
+                }
+
+                TFBot
+                {
+                    Class           Medic
+                    ClassIcon       medic_uber_armored
+                    Name            "Armored Uber Medic"
+                    Health          750
+                    Skill           Expert
+                    Attributes      SpawnWithFullCharge
+                    Tag             bot_giant
+                    Scale           1.37
+                    Item            "The Warsworn Helmet"
+
+                    CharacterAttributes
+                    {
+                        "heal rate bonus"       5
+                    }
+                }
+
+                TFBot
+                {
+                    Class           Medic
+                    ClassIcon       medic_uber_armored
+                    Name            "Armored Uber Medic"
+                    Health          750
+                    Skill           Expert
+                    Attributes      SpawnWithFullCharge
+                    Tag             bot_giant
+                    Scale           1.37
+                    Item            "The Warsworn Helmet"
+
+                    CharacterAttributes
+                    {
+                        "heal rate bonus"       5
+                    }
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    W6-2support
+            Where                   spawnbot
+            WaitForAllSpawned       W5_Wank
+            TotalCount              28
+            MaxActive               12
+            SpawnCount              6
+            WaitBetweenSpawns       3
+            TotalCurrency           50
+            Support                 Limited
+
+            TFBot
+            {
+                Template    T_TFBot_Heavyweapons_Shotgun
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    W6-2b
+            Where                   spawnbot_flank
+            WaitForAllSpawned       W6-2a
+            TotalCount              1
+            MaxActive               1
+            SpawnCount              1
+            WaitBeforeStarting      45
+            TotalCurrency           50
+
+            TFBot
+            {
+                Template    T_TFBot_Soldier_BurstFire
+                Name        "Frostrock Sweep"
+
+                CharacterAttributes
+                {
+                    "damage bonus"      0.5
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name                    W6-2b
+            Where                   spawnbot_flank
+            WaitForAllSpawned       W6-2a
+            TotalCount              99
+            MaxActive               15
+            SpawnCount              5
+            WaitBeforeStarting      45
+            TotalCurrency           50
+            Support                 Limited
+
+            TFBot
+            {
+                Template        T_TFBot_Scout_Fish
+                ClassIcon       scout_fish_nys
+            }
+        }
+    }
+}
+// Under The Copyright Act of 2021
+// © Copyrighted By Furuka
