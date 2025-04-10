@@ -559,11 +559,12 @@ WaveSchedule
 
         WaveSpawn
 	    {
+			Name wave03support_scouthorde
 		    Where spawnbot
 		    TotalCount 100
-		    MaxActive 16
+		    MaxActive 12
 		    SpawnCount 4
-		    WaitBeforeStarting 7
+		    WaitBeforeStarting 0
 		    WaitBetweenSpawns 3
 		    TotalCurrency 200
 		
@@ -593,31 +594,120 @@ WaveSchedule
 			    }
 		    }
 	    }
-
-        WaveSpawn
+		WaveSpawn
 		{
+			Name wave03a_crocketpart1
 			Where spawnbot
-			TotalCount 8
-			MaxActive 4
+			TotalCount 2
+			MaxActive 2
 			SpawnCount 2
 			WaitBeforeStarting 0
-            WaitBetweenSpawns 30
-			TotalCurrency 100
+			WaitBetweenSpawns 15
 
-            Squad
-            {
-			    TFBot
-			    {
-                    Template T_TFBot_Soldier_BurstFire
-                    ClassIcon soldier_burstfire_hyper_lite
-                }
-                TFBot
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit
+			}
+		}
+		WaveSpawn
+		{
+			Name wave03b_crocketpart2
+			WaitForAllSpawned wave03a_crocketpart1
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 15
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit
+			}
+		}
+		WaveSpawn
+		{
+			Name wave03b_shortstops
+			WaitForAllSpawned wave03a_crocketpart1
+			Where spawnbot_left
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 15
+
+			TFBot
+			{
+				Template T_TFBot_Scout_Shortstop
+			}
+		}
+		WaveSpawn
+		{
+			Name wave03c_barrage
+			WaitForAllSpawned wave03b_crocketpart2
+			Where spawnbot
+			TotalCount 5
+			MaxActive 5
+			Spawncount 5
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 0
+
+			Squad
+			{
+				TFBot
 				{
-					Template T_TFBot_Giant_Medic
-                    ClassIcon medic_pop                  
+					Template T_TFBot_Giant_Soldier_SlowBarrage
 				}
-            }
-        }
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Kritzkrieg"
+					Attributes AlwaysCrit
+					Name "Kritz Medic"
+					Tag bot_squad_member
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Kritzkrieg"
+					Attributes AlwaysCrit
+					Name "Kritz Medic"
+					Tag bot_squad_member
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Kritzkrieg"
+					Attributes AlwaysCrit
+					Name "Kritz Medic"
+					Tag bot_squad_member
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Kritzkrieg"
+					Attributes AlwaysCrit
+					Name "Kritz Medic"
+					Tag bot_squad_member
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave03c_sandman
+			WaitForAllSpawned wave03b_crocketpart2
+			Where spawnbot
+			TotalCount 16
+			MaxActive 12
+			SpawnCount 8
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 8
+
+			TFBot
+			{
+				Template T_TFBot_Scout_Sandman_FastCharge
+			}
+		}
     }
 }
 	
