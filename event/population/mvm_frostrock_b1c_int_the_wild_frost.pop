@@ -1052,7 +1052,7 @@ Wave
     WaveSpawn
     {
         Where                   spawnbot_flank
-        Name                    4-1
+        Name                    4-1a
         TotalCount              3
         MaxActive               2
         SpawnCount              1
@@ -1113,7 +1113,8 @@ Wave
     WaveSpawn
     {
         Where                   spawnbot_flank
-        WaitForAllSpawned       4-1
+        Name                    4-1
+        WaitForAllSpawned       4-1a
         TotalCount              6
         MaxActive               6
         SpawnCount              3
