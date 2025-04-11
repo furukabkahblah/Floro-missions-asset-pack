@@ -1142,6 +1142,45 @@ Wave
         }
     }
 
+    WaveSpawn
+    {
+        Where                   spawnbot
+        WaitForAllSpawned       4-1
+        TotalCount              100
+        MaxActive               15
+        SpawnCount              1
+        WaitBeforeStarting      0
+        WaitBetweenSpawns       0
+        TotalCurrency           100
+        Support                 1
+
+        RandomChoice
+        {
+            TFBot
+            {
+                Class       Demoman
+                Skill       Expert
+            }
+
+            TFBot
+            {
+                Class       Demoman
+                Skill       Expert
+            }
+
+            TFBot
+            {
+                Class       Pyro
+                Skill       Expert
+            }
+
+            TFBot
+            {
+                Template    T_TFBot_Pyro_Flaregun
+            }
+        }
+    }
+
     Wave
     {
         StartWaveOutput
