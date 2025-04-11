@@ -1,6 +1,7 @@
 // credit to lobotomy and claudz for helping me with the vscript stuff in general
 // collab between floro and furuka
 // note this currently depends on popext and the current nut file (wildfrost_phrases.nut)
+//reverted to old version
 #base       robot_giant.pop
 #base       robot_standard.pop
 #base       robot_wildfrost.pop
